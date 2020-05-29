@@ -73,7 +73,7 @@ tweets <- tweets %>% select(text_new) %>%
   unnest_tokens(word, text_new)
 
 
-#Melakukan plot yang menghasilkan kata-kata yang sering di-Tweet oleh akun @jokowi
+#Melakukan plot yang menghasilkan 15 kata unik yang sering di-Tweet oleh akun @jokowi
 tweets %>% 
   count(word, sort = TRUE) %>%
   top_n(15) %>%
