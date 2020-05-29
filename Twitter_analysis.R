@@ -2,17 +2,17 @@ library(rtweet)
 library(tidyverse)
 library(ggplot2)
 
-#Connect to Twitter API
+#Connect to Twitter API (This token shall be secret)
 twitter_token <- create_token(
-  app = "dhtamado",
-  consumer_key = "C0AIGCi79i6FYaoxde5Btb8Ya",
-  consumer_secret = "LgiTuPx133YPjxnUC7OLGrDi3FT2kksjENItKs1NSOLrXRRuaP",
-  access_token = "61449429-m56kDNv8NBKYJy4rPoWJd6PJHXfyxdfYArDXIQlDB",
-  access_secret = "wONWjKyc2SBWG1xKjlq2YmjbFWdrGUk5pxiMNBQYwuyAD",
+  app = "****",
+  consumer_key = "****",
+  consumer_secret = "****",
+  access_token = "****",
+  access_secret = "****",
   set_renv = TRUE
 )
 
-#Mengambil tweet dari akun pak jokowi 
+#Mengambil tweet dari akun @jokowi 
 # (nilai n = 3200 menunjukkan jumlah maksimal tweets yang bisa diambil oleh Twitter)
 jokowi <- get_timeline("@jokowi", n = 3200)
 
@@ -23,11 +23,11 @@ jokowi_organic_tweet <- jokowi[jokowi$is_retweet == FALSE,]
 jokowi_organic_tweet <- subset(jokowi_organic_tweet, is.na(jokowi_organic_tweet$reply_to_status_id))
 view(jokowi_organic_tweet)
 
-#Analisa engagement akun twitter Jokowi (Like dan Retweet)
+#Analisa engagement akun twitter @jokowi (Like dan Retweet)
 # 1.Melihat tweet Jokowi dengan urutan yang paling banyak di Likes
 likes <- jokowi_organic_tweet %>% arrange(-favorite_count)
 
-# 2.Melihat tweet Jokowi yang paling banyak di retweet (descending)
+# 2.Melihat tweet @jokowi yang paling banyak di retweet (descending)
 retweet <- jokowi_organic_tweet %>% arrange(-retweet_count)
 
 #Analisa ratio reply/likes/organic tweets
@@ -38,8 +38,7 @@ view(jokowi_retweet)
 #Membuat dataframe hanya reply
 jokowi_reply <- subset(jokowi, !is.na(jokowi$reply_to_status_id))
 
-
-#membuat data jumlah masing2 (organic, retweet, reply)
+#Membuat data jumlah masing2 (organic, retweet, reply)
 n_jkw_organic <- nrow(jokowi_organic_tweet)
 n_reply <- nrow(jokowi_reply)
 n_retweet <- nrow(jokowi_retweet)
@@ -59,7 +58,6 @@ jokowi_organic_tweet$text <- gsub("amp", "", jokowi_organic_tweet$text)
 jokowi_organic_tweet$text <- gsub("[\r\n]", "", jokowi_organic_tweet$text)
 jokowi_organic_tweet$text <- gsub("[[:punct:]]", "", jokowi_organic_tweet$text)
 
-
 #Menghilangkan kata sambung, kata panggil dll (list dibuat sendiri)
 library(tidytext)
 library(tm)
@@ -75,7 +73,7 @@ tweets <- tweets %>% select(text_new) %>%
   unnest_tokens(word, text_new)
 
 
-#Melakukan plot yang menghasilkan kata-kata yang sering di-Tweet oleh Presiden Jokowi
+#Melakukan plot yang menghasilkan kata-kata yang sering di-Tweet oleh akun @jokowi
 tweets %>% 
   count(word, sort = TRUE) %>%
   top_n(15) %>%
@@ -84,7 +82,7 @@ tweets %>%
   geom_bar(mapping = aes(x = reorder(word,n), y = n), stat = "identity", fill = "blue") + coord_flip() +
   labs(x = "Kata unik", y = "Jumlah Tweet", title = "Kata yang sering di-Tweet oleh Presiden Jokowi", subtitle = "*Kata-kata sambung telah dihilangkan")
 
-#Membuat wordcloud yang berisi kata-kata unik dari tweet Jokowi
+#Membuat wordcloud yang berisi kata-kata unik dari tweet @jokowi
 library(wordcloud)
 library(RColorBrewer)
 set.seed(1234)
