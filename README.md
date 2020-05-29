@@ -1,4 +1,4 @@
-# Analisa dasar mengenai Text Mining (Case study: Akun Twitter Presiden RI Joko Widodo)
+# Text Mining (Case study: Akun Twitter Presiden RI Joko Widodo)
 Menganalisa Tweet yang diposting oleh Presiden RI Joko Widodo menggunakan Bahasa R (R languange).
 Roadmap analisa adalah sebagai berikut : 
 
