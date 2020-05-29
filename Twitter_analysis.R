@@ -16,7 +16,7 @@ twitter_token <- create_token(
 # (nilai n = 3200 menunjukkan jumlah maksimal tweets yang bisa diambil oleh Twitter)
 jokowi <- get_timeline("@jokowi", n = 3200)
 
-#Membuang retweet
+#Membuang tweet retweet
 jokowi_organic_tweet <- jokowi[jokowi$is_retweet == FALSE,]
 
 #Membuang tweet reply
@@ -26,19 +26,18 @@ view(jokowi_organic_tweet)
 #Analisa engagement akun twitter @jokowi (Like dan Retweet)
 # 1.Melihat tweet Jokowi dengan urutan yang paling banyak di Likes
 likes <- jokowi_organic_tweet %>% arrange(-favorite_count)
-
 # 2.Melihat tweet @jokowi yang paling banyak di retweet (descending)
 retweet <- jokowi_organic_tweet %>% arrange(-retweet_count)
 
-#Analisa ratio reply/likes/organic tweets
+#Analisa rasio organic vs retweet vs reply
 #Mebuat dataframe hanya retweet
 jokowi_retweet <- jokowi[jokowi$is_retweet == "TRUE", ]
 view(jokowi_retweet)
 
-#Membuat dataframe hanya reply
+#Membuat dataframe hanya tweet reply
 jokowi_reply <- subset(jokowi, !is.na(jokowi$reply_to_status_id))
 
-#Membuat data jumlah masing2 (organic, retweet, reply)
+#Membuat dataframe jumlah masing-masing kategori (organic, retweet dan reply)
 n_jkw_organic <- nrow(jokowi_organic_tweet)
 n_reply <- nrow(jokowi_reply)
 n_retweet <- nrow(jokowi_retweet)
@@ -47,8 +46,7 @@ analisis <- data.frame(
   Kategori = c("Organic", "Retweet", "Reply"),
   Jumlah = c(n_jkw_organic,n_retweet,n_reply)
 )
-#Menampilkan barplot Perbandingan Jumlah Organic vs Retweet vs Reply Tweet
-library(ggplot2)
+#Menampilkan barplot perbandingan jumlah organic vs retweet vs reply tweet
 ggplot(data = analisis) + geom_bar(mapping = aes(x = Kategori, y = Jumlah, fill = Kategori), stat = "identity")
 
 #Membersihkan tweet dari berbagai hal yang tak diinginkan (link url dan tanda baca)
@@ -64,14 +62,13 @@ library(tm)
 library(tidyverse)
 tweets <- jokowi_organic_tweet %>% select(text)
 tweets <- lapply(tweets, tolower)
-x = readLines('C://Users/LENOVO/Desktop/STEM/stopwords.txt') #List yang mengandung kata-kata sambung/panggilan yang dibuat sendiri
+x = readLines('stopwords.txt') #List yang mengandung kata-kata sambung/panggilan yang dibuat sendiri
 y = tweets$text
 y = removeWords(y,x) %>% str_squish()
 tweets$text_new <- y
 tweets <- as_tibble(tweets)
 tweets <- tweets %>% select(text_new) %>%
   unnest_tokens(word, text_new)
-
 
 #Melakukan plot yang menghasilkan 15 kata unik yang sering di-Tweet oleh akun @jokowi
 tweets %>% 
