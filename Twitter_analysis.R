@@ -2,7 +2,7 @@ library(rtweet)
 library(tidyverse)
 library(ggplot2)
 
-#Connect to Twitter API (This token shall be secret)
+#Connect to Twitter API (This token information shall be secret)
 twitter_token <- create_token(
   app = "****",
   consumer_key = "****",
