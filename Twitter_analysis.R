@@ -6,7 +6,6 @@ library(tm)
 library(wordcloud)
 library(RColorBrewer)
 
-
 #Connect to Twitter API (This token information should be secret)
 twitter_token <- create_token(
   app = "****",
