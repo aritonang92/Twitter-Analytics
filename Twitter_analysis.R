@@ -1,6 +1,11 @@
 library(rtweet)
 library(tidyverse)
 library(ggplot2)
+library(tidytext)
+library(tm)
+library(wordcloud)
+library(RColorBrewer)
+
 
 #Connect to Twitter API (This token information should be secret)
 twitter_token <- create_token(
@@ -57,9 +62,6 @@ jokowi_organic_tweet$text <- gsub("[\r\n]", "", jokowi_organic_tweet$text)
 jokowi_organic_tweet$text <- gsub("[[:punct:]]", "", jokowi_organic_tweet$text)
 
 #Menghilangkan kata sambung, kata panggil dll (list dibuat sendiri)
-library(tidytext)
-library(tm)
-library(tidyverse)
 tweets <- jokowi_organic_tweet %>% select(text)
 tweets <- lapply(tweets, tolower)
 x = readLines('stopwords.txt') #List yang mengandung kata-kata sambung/panggilan yang dibuat sendiri
@@ -80,7 +82,5 @@ tweets %>%
   labs(x = "Kata unik", y = "Jumlah Tweet", title = "Kata yang sering di-Tweet oleh Presiden Jokowi", subtitle = "*Kata-kata sambung telah dihilangkan")
 
 #Membuat wordcloud yang berisi kata-kata unik dari tweet @jokowi
-library(wordcloud)
-library(RColorBrewer)
 set.seed(1234)
 wordcloud(tweets$word, min.freq = 1, max.words = 150, random.order = FALSE, rot.per=0.35, colors = brewer.pal(8,"Dark2"))
